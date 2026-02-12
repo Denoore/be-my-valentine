@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Invite</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffeef2;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            background: white;
+            padding: 10% 5%;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .heart { font-size: clamp(40px, 10vw, 60px); margin-bottom: 10px; }
+
+        h1 { 
+            color: #d63384; 
+            font-size: clamp(1.5rem, 5vw, 2rem); 
+            margin: 10px 0;
+        }
+
+        p { color: #555; font-size: 1.1rem; }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            touch-action: manipulation;
+        }
+
+        #yesBtn { background-color: #ff4d6d; color: white; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); }
+        #noBtn { background-color: #adb5bd; color: white; position: relative; }
+        
+        #response { 
+            margin-top: 25px; 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            color: #d63384; 
+            display: none; 
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="heart">💝</div>
+    <h1>Will you be my Valentine?</h1>
+    <p>Aryzah Rheiyne</p>
+    
+    <div class="buttons">
+        <button id="yesBtn" onclick="sayYes()">Yes!</button>
+        <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+    </div>
+
+    <div id="response">🎉 See you on Saturday!! ❤️</div>
+</div>
+
+<script>
+    function sayYes() {
+        document.getElementById('response').style.display = 'block';
+        document.getElementById('noBtn').style.display = 'none';
+        document.getElementById('yesBtn').style.transform = 'scale(1.1)';
+        document.querySelector('h1').innerText = "It's a Date!";
+    }
+
+    function moveButton() {
+        const btn = document.getElementById('noBtn');
