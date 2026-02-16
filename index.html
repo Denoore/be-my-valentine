@@ -2,122 +2,156 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Be My Valentine?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Promise to You</title>
     <style>
+        :root {
+            --env-color: #ffadad; /* Soft Pink/Red */
+            --env-dark: #ff8585;
+            --paper: #ffffff;
+            --text-color: #4a4a4a;
+        }
+
         body {
-            margin: 0;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #53161d;
-            font-family: serif;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #fff1f1;
+            font-family: 'Georgia', serif;
             overflow: hidden;
             touch-action: manipulation;
         }
-        .card {
-            background: #fffbf0;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 85%;
-            max-width: 350px;
-            z-index: 10;
-        }
-        h1 { color: #d8a7b1; font-size: 1.5rem; margin: 15px 0; }
-        
-        /* This container keeps buttons side-by-side at the start */
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            height: 60px; /* Space for buttons */
+
+        .envelope-wrapper {
             position: relative;
-        }
-
-        button {
-            padding: 12px 25px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 10px;
+            width: 90vw;
+            max-width: 320px;
+            height: 220px;
+            background-color: var(--env-dark);
             cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        #yesBtn { background: #6d2932; color: white; z-index: 2;
-        font-family: serif; }
-        
-        /* No button starts normal, then gets "fixed" position via JS */
-        #noBtn { 
-            background: #adb5bd; 
-            color: white; 
+        /* The Heart Seal */
+        .heart {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: #d00000;
+            transform: translate(-50%, -50%) rotate(45deg);
+            z-index: 4;
+            transition: opacity 0.3s;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            width: 30px;
+            height: 30px;
+            background: #d00000;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .heart::before { left: -15px; }
+        .heart::after { top: -15px; }
+
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background: var(--paper);
             z-index: 1;
-            font-family: serif;
-        }
-        
-        #message {
-            display: none;
-            margin-top: 20px;
-            color: #d63384;
-            font-weight: bold;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow-y: auto; /* Allows scrolling if text is long */
         }
 
-        .hidden { display: none !important; }
+        .letter p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-color);
+            margin: 0;
+            text-align: left;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 45vw solid transparent;
+            border-right: 45vw solid transparent;
+            border-top: 110px solid var(--env-color);
+            transform-origin: top;
+            transition: transform 0.5s ease, z-index 0.5s;
+            z-index: 3;
+        }
+
+        @media (min-width: 355px) {
+            .flap {
+                border-left: 160px solid transparent;
+                border-right: 160px solid transparent;
+            }
+        }
+
+        /* Front Pocket */
+        .envelope-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(35deg, var(--env-dark) 50%, transparent 50.5%),
+                linear-gradient(-35deg, var(--env-dark) 50%, transparent 50.5%);
+            background-repeat: no-repeat;
+            z-index: 2;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Open Animations */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .letter {
+            transform: translateY(-160px); /* Slides up further for readability */
+            z-index: 5;
+            height: auto;
+            min-height: 200px;
+        }
+
+        .envelope-wrapper.open .heart {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div style="font-size: 50px;">💝</div>
-        <h1 id="question">Will you be my Valentine?</h1>
-        
-        <div class="btn-container">
-            <button id="yesBtn">Yes!</button>
-            <button id="noBtn">No</button>
-        </div>
-
-        <div id="message">
-            <p>Yay! It's a date! ❤️</p>
-            <a href="https://m.me/waynesleppyhead" style="color: #ff4d6d; text-decoration: none; font-size: 0.8rem;">Click here to tell me! 😉</a>
+    <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+        <div class="flap"></div>
+        <div class="heart"></div>
+        <div class="letter">
+            <p>
+                <strong>My Dearest,</strong><br><br>
+                I promise to never repeat the mistakes I’ve made, especially the cheating and letting my eyes wander. 
+                I want to be the boyfriend you deserve and a man your parents can be proud of. <br><br>
+                I know I have to earn their trust back through hard work and consistency, and I’m ready to do that. 
+                I want to dedicate everything I have to your happiness—not just to impress you as we start over, 
+                but because I’ve truly learned from my mistakes. <br><br>
+                I’m saying this because I want us to be together for a long, long time.
+            </p>
         </div>
     </div>
-
-    <script>
-        const yesBtn = document.getElementById('yesBtn');
-        const noBtn = document.getElementById('noBtn');
-        const question = document.getElementById('question');
-        const message = document.getElementById('message');
-
-        // Yes Logic
-        yesBtn.addEventListener('click', () => {
-            question.innerHTML = "Perfect!";
-            message.style.display = "block";
-            noBtn.classList.add('hidden');
-            yesBtn.style.transform = "scale(1.2)";
-        });
-
-        // No Logic
-        const moveNo = () => {
-            // Once they interact, we make it fixed so it can fly anywhere
-            noBtn.style.position = 'fixed';
-            
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        };
-
-        noBtn.addEventListener('mouseover', moveNo);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); 
-            moveNo();
-        });
-    </script>
 
 </body>
 </html>
